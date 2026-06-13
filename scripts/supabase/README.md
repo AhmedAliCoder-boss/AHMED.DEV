@@ -1,6 +1,6 @@
 # Supabase Setup for Ahmed Portfolio
 
-This guide shows the easiest steps to use the Supabase schema in `scripts/supabase/schema.sql`.
+This guide shows the easiest steps to use the Supabase schema in `scripts/supabase/setup.sql`.
 
 ## 1. Create a Supabase project
 1. Go to https://app.supabase.com
@@ -9,7 +9,7 @@ This guide shows the easiest steps to use the Supabase schema in `scripts/supaba
 
 ## 2. Open the SQL editor
 1. In your Supabase project, open `SQL` -> `New query`.
-2. Copy the entire content of `scripts/supabase/schema.sql`.    
+2. Copy the entire content of `scripts/supabase/setup.sql`.
 3. Paste it into the SQL editor.
 4. Click `RUN`.
 
@@ -18,10 +18,17 @@ This guide shows the easiest steps to use the Supabase schema in `scripts/supaba
 2. Create or sign in with your admin email.
 3. Copy the `id` field for your user.
 4. Open `SQL` -> `New query` again.
-5. Run this, replacing the ID with your copied id:
+5. Run one of the following (replace the ID):
 
+-- Option A: set the `profiles.is_admin` flag
 ```sql
-insert into admins (id) values ('YOUR-USER-ID-HERE');
+INSERT INTO profiles (id, full_name, username, is_admin) VALUES ('YOUR-USER-ID-HERE', 'Your Name', 'yourusername', TRUE)
+ON CONFLICT (id) DO UPDATE SET is_admin = TRUE;
+```
+
+-- Option B: insert into `admins` mapping table
+```sql
+INSERT INTO admins (id) VALUES ('YOUR-USER-ID-HERE') ON CONFLICT DO NOTHING;
 ```
 
 ## 4. Add a test project row
@@ -41,6 +48,7 @@ insert into admins (id) values ('YOUR-USER-ID-HERE');
 In your project folder, run:
 
 ```bash
+npm install
 npm run dev
 ```
 

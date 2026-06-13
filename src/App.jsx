@@ -1,26 +1,29 @@
 import './App.css'
-import Nav from './components/Nav'
-import Hero from './components/Hero'
-import Projects from './components/Projects'
-import ContactForm from './components/ContactForm'
-import Admin from './components/Admin'
+import { Suspense } from 'react'
+import { BrowserRouter } from 'react-router-dom'
+import AppRoutes from './routes/AppRoutes'
+import { ThemeProvider } from './contexts/ThemeContext'
+import { AuthProvider } from './contexts/AuthContext'
+import Header from './components/layout/Header'
+import Footer from './components/layout/Footer'
 
 function App() {
-  const isAdminRoute = window.location.pathname === '/admin'
-
-  if (isAdminRoute) {
-    return <Admin />
-  }
-
   return (
-    <div id="root" className="min-h-screen">
-      <Nav />
-      <main className="px-6 py-12">
-        <Hero />
-        <Projects />
-        <ContactForm />
-      </main>
-    </div>
+    <ThemeProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <div className="min-h-screen flex flex-col">
+            <Header />
+            <main className="flex-1">
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading…</div>}>
+                <AppRoutes />
+              </Suspense>
+            </main>
+            <Footer />
+          </div>
+        </BrowserRouter>
+      </AuthProvider>
+    </ThemeProvider>
   )
 }
 
